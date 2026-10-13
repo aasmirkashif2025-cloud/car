@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) ||
+        (request.auth.token.email == 'aasmirkashif2025@gmail.com' && request.auth.token.email_verified == true)
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // --- VEHICLES ---
+    match /vehicles/{vehicleId} {
+      // Anyone can read published vehicles; admins can read drafts & all
+      allow get: if isValidId(vehicleId) && (resource.data.published == true || isAdmin());
+      allow list: if isAdmin() || (resource.data.published == true);
+      
+      // Only authenticated admins can write vehicles
+      allow create: if isAdmin() && isValidId(vehicleId);
+      allow update: if isAdmin() && isValidId(vehicleId);
+      allow delete: if isAdmin() && isValidId(vehicleId);
+    }
+
+    // --- SHOWROOM SETTINGS ---
+    match /showroomSettings/{settingsId} {
+      allow read: if isValidId(settingsId);
+      allow write: if isAdmin() && isValidId(settingsId);
+    }
+
+    // --- LEADS & CRM ---
+    match /leads/{leadId} {
+      // Public can create a new lead (with size guards and mandatory fields)
+      allow create: if isValidId(leadId) &&
+        request.resource.data.keys().hasAll(['id', 'leadType', 'status', 'fullName', 'phone']) &&
+        request.resource.data.fullName is string && request.resource.data.fullName.size() <= 100 &&
+        request.resource.data.phone is string && request.resource.data.phone.size() <= 30 &&
+        request.resource.data.status == 'New';
+        
+      // Only staff/admins can list, read, update status, and manage leads
+      allow get, list: if isAdmin();
+      allow update: if isAdmin() && isValidId(leadId);
+      allow delete: if isAdmin() && isValidId(leadId);
+    }
+
+    // --- ADMIN PROFILES ---
+    match /admins/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow write: if false; // System bootstrapped only
+    }
+  }
+}

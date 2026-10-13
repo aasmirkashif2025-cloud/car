@@ -1,0 +1,6 @@
+{
+  "name": "Maison Motors — Ultra-Premium Automotive Atelier",
+  "description": "Pakistan's premier luxury automotive showroom and dealership atelier. Discover curated luxury vehicles, certified Japanese imports, and premium performance marques across Lahore, Karachi, and Islamabad.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

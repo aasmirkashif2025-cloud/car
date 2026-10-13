@@ -1,0 +1,73 @@
+{
+  "entities": {
+    "Vehicle": {
+      "title": "Vehicle",
+      "description": "Represents an ultra-luxury vehicle in the showroom catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "make": { "type": "string" },
+        "model": { "type": "string" },
+        "variant": { "type": "string" },
+        "year": { "type": "number" },
+        "price": { "type": "number" },
+        "mileage": { "type": "number" },
+        "transmission": { "type": "string" },
+        "fuelType": { "type": "string" },
+        "city": { "type": "string" },
+        "assembly": { "type": "string" },
+        "coverImage": { "type": "string" },
+        "status": { "type": "string", "enum": ["available", "reserved", "sold"] },
+        "published": { "type": "boolean" },
+        "featured": { "type": "boolean" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "make", "model", "year", "price", "status", "published"]
+    },
+    "Lead": {
+      "title": "Lead",
+      "description": "Represents a customer enquiry, test-drive booking, trade-in, or financing request",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "leadType": { "type": "string" },
+        "status": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "city": { "type": "string" },
+        "preferredContactMethod": { "type": "string" },
+        "vehicleId": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "leadType", "status", "fullName", "phone"]
+    },
+    "ShowroomSettings": {
+      "title": "ShowroomSettings",
+      "description": "Dealership business details, addresses, and branding",
+      "type": "object",
+      "properties": {
+        "showroomName": { "type": "string" },
+        "phone": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "email": { "type": "string" }
+      },
+      "required": ["showroomName", "phone", "whatsappNumber"]
+    }
+  },
+  "firestore": {
+    "/vehicles/{vehicleId}": {
+      "schema": { "$ref": "#/entities/Vehicle" },
+      "description": "Collection of showroom vehicles and specifications"
+    },
+    "/leads/{leadId}": {
+      "schema": { "$ref": "#/entities/Lead" },
+      "description": "Private collection of incoming client enquiries and bookings"
+    },
+    "/showroomSettings/{settingsId}": {
+      "schema": { "$ref": "#/entities/ShowroomSettings" },
+      "description": "Public read settings for showroom identity and locations"
+    }
+  }
+}

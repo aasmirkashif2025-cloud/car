@@ -1,0 +1,16 @@
+{
+  "name": "Maison Motors — Ultra-Premium Automotive Atelier",
+  "short_name": "Maison Motors",
+  "description": "Pakistan's premier luxury automotive showroom and dealership atelier.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#08090a",
+  "theme_color": "#08090a",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}
